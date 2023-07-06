@@ -1,29 +1,47 @@
-// const TelegramBot = require('node-telegram-bot-api');
-//const Stripe = require('stripe');
-
-import {Telegraf} from "telegraf";
+import TelegramBot from 'node-telegram-bot-api'
 import dotenv from 'dotenv';
 import Stripe from 'stripe';
 
 import {
-    startMessage
+    startMessage,
+    chooseAmountMessage
 } from "./components/messages/messages.js";
 
 import {
-    typeOfCardButtons
+    typeOfCardButtons,
+    amountButtons
 } from "./components/buttons/buttons.js";
 
 dotenv.config();
 
-const bot = new Telegraf(process.env.BOT_TOKEN);
-console.log(bot)
+const bot = new TelegramBot(process.env.BOT_TOKEN, {polling: true});
 
-//const stripe = Stripe(process.env.PAYMENT_KEY)
+const stripe = Stripe(process.env.PAYMENT_KEY)
 
-
-bot.start( (ctx) => {
+bot.onText(/\/start/, async (msg) => {
+    const chatId = msg.chat.id
     console.log('Bot was started');
-    ctx.reply(startMessage, typeOfCardButtons)
+    await bot.sendMessage(chatId, startMessage, typeOfCardButtons)
 })
 
-bot.launch()
+bot.on('callback_query', async (query) => {
+    const chatId = query.message.chat.id;
+    const userId = query.from.id;
+
+    try {
+        switch (query.data) {
+            case 'Foreign Card':
+                await bot.sendMessage(chatId, chooseAmountMessage, amountButtons)
+                break;
+        }
+    } catch (err) {
+        console.error(err);
+    }
+})
+
+
+
+bot.on('polling_error', (err) => {
+    console.log(err)
+})
+

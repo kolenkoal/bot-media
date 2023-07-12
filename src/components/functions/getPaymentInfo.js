@@ -6,16 +6,16 @@ export const getPaymentInfo = async (query, date, chatId) => {
             title: 'Donation',
             description: `Поддержать «Холод» на ${amount / 100} €`,
             payload: `ChatID: ${chatId}. Date: ${date}. Amount: ${amount / 100} €`,
-            providerToken: process.env.PROVIDER_TOKEN,
+            providerToken: process.env.PROVIDER_TOKEN_LIVE,
             currency: 'EUR',
             prices: [{
                 label: "Donation",
                 amount: amount
             }],
-            form : {
+            form: {
                 start_parameter: 'get_access',
-                need_email:true,
-                send_email_to_provider:true,
+                need_email: true,
+                send_email_to_provider: true,
                 provider_data: {
                     receipt: {
                         items: [
@@ -31,7 +31,7 @@ export const getPaymentInfo = async (query, date, chatId) => {
                         ]
                     }
                 }
-            }
+            },
         })
     } catch (err) {
         console.error(err)

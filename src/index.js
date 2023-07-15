@@ -1,5 +1,4 @@
 import TelegramBot from 'node-telegram-bot-api'
-import {Stripe} from "stripe";
 import dotenv from 'dotenv';
 
 import {
@@ -55,7 +54,7 @@ bot.on('callback_query', async (query) => {
 
     try {
         // If User chose the amount to pay in One-time Payment
-        if (['1', '3', '5', '10', '20'].includes(query.data)) {
+        if (['3', '5', '10', '20'].includes(query.data)) {
             const paymentInfo = await getPaymentInfo(query, date, chatId);
 
             await bot.sendInvoice(
@@ -68,14 +67,10 @@ bot.on('callback_query', async (query) => {
                 paymentInfo.prices,
                 paymentInfo.form,
             )
-
-            // If User chose the amount to pay in Regular Payment
-        } else if (['3 €', '5 €', '10 €', '20 €'].includes(query.data)) {
-
         }
 
-        // If user chose to pay with a foreign card
         switch (query.data) {
+            // If user chose to pay with a foreign card
             case 'Foreign Card':
                 await bot.sendMessage(chatId, typeOfPaymentMessage, typeOfPaymentButtons)
                 console.log(`A Foreign Card was chosen in ${chatId} chat`)
@@ -83,15 +78,18 @@ bot.on('callback_query', async (query) => {
                 break;
 
             case 'One Time Donation':
+                // If user chose to make a one-time donation
                 await bot.sendMessage(chatId, chooseAmountMessage, amountButtonsOneTime)
                 console.log(`A One-Time Donation was chosen in ${chatId} chat`)
 
                 break;
+
             case 'Regular Donation':
+                // If user chose to sign up for a regular donation
                 await bot.sendMessage(chatId, chooseAmountMessage, amountButtonsRegular)
                 console.log(`A Regular Donation was chosen in ${chatId} chat`)
 
-
+                break;
         }
 
     } catch (err) {

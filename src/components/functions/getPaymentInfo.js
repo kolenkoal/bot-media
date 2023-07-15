@@ -36,6 +36,4 @@ export const getPaymentInfo = async (query, date, chatId) => {
     } catch (err) {
         console.error(err)
     }
-
-
 }

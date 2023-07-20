@@ -5,7 +5,9 @@ import {
     startMessage,
     typeOfPaymentMessage,
     chooseAmountMessage,
-    successfulPaymentMessage
+    successfulPaymentMessage,
+    otherAmountMessage,
+    tryAgainAmountMessage
 } from "./components/messages/messages.js";
 
 import {
@@ -50,6 +52,19 @@ bot.onText(/\/donation/, async (msg) => {
     }
 })
 
+function sendInvoice(paymentInfo, chatId) {
+    bot.sendInvoice(
+        chatId,
+        paymentInfo.title,
+        paymentInfo.description,
+        paymentInfo.payload,
+        paymentInfo.providerToken,
+        paymentInfo.currency,
+        paymentInfo.prices,
+        paymentInfo.form,
+    )
+}
+
 //User interaction
 bot.on('callback_query', async (query) => {
     const chatId = query.message.chat.id,
@@ -58,18 +73,9 @@ bot.on('callback_query', async (query) => {
     try {
         // If User chose the amount to pay in One-time Payment
         if (['3', '5', '10', '20'].includes(query.data)) {
-            const paymentInfo = await getPaymentInfo(query, date, chatId);
+            const paymentInfo = await getPaymentInfo(query.data, date, chatId);
 
-            await bot.sendInvoice(
-                chatId,
-                paymentInfo.title,
-                paymentInfo.description,
-                paymentInfo.payload,
-                paymentInfo.providerToken,
-                paymentInfo.currency,
-                paymentInfo.prices,
-                paymentInfo.form,
-            )
+            await sendInvoice(paymentInfo, chatId)
         }
 
         switch (query.data) {
@@ -107,11 +113,42 @@ bot.on('callback_query', async (query) => {
                 console.log(`A Regular Donation was chosen in ${chatId} chat`)
 
                 break;
+
+            case 'Other amount':
+                // If user chose other amount in one-time donation
+                await bot.sendMessage(chatId, otherAmountMessage)
+                console.log(`Other amount was chosen in ${chatId} chat`)
+
+                break;
         }
 
     } catch (err) {
         console.error(err);
     }
+})
+
+bot.on('message', async (msg) => {
+    let text = msg.text;
+    if(text !== '/start' && text!== '/donation') {
+        try {
+            const chatId = msg.chat.id, date = new Date();
+
+            text = text.replace(',', '.');
+
+            if (Number(text) >= 1 && !isNaN(text) ) {
+                const paymentInfo = await getPaymentInfo(text, date, chatId);
+
+                await sendInvoice(paymentInfo, chatId)
+
+            } else {
+                await bot.sendMessage(chatId, tryAgainAmountMessage)
+            }
+
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
 })
 
 // Pre-checkout

@@ -1,6 +1,6 @@
 export const getPaymentInfo = async (query, date, chatId) => {
     try {
-        const amount = Number(query.data) * 100;
+        const amount = Number(query) * 100;
 
         return ({
             title: 'Donation',

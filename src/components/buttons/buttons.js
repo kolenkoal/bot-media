@@ -44,8 +44,11 @@ export const amountButtonsOneTime = {
             ],
             [
                 {text: '10 €', callback_data: '10'},
-                {text: '20 €', callback_data: '20'}
+                {text: '20 €', callback_data: '20'},
             ],
+            [
+                {text: 'Другая сумма', callback_data: 'Other amount'}
+            ]
         ]
     }
 }

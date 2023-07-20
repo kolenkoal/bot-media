@@ -11,7 +11,10 @@ import {
 import {
     typeOfCardButtons,
     typeOfPaymentButtons,
-    amountButtonsOneTime, amountButtonsRegular
+    amountButtonsOneTime,
+    amountButtonsRegular,
+    typeOfPaymentButtonsWithRussianCard,
+    amountButtonsRegularWithRussianCard
 } from "./components/buttons/buttons.js";
 
 import {
@@ -70,6 +73,20 @@ bot.on('callback_query', async (query) => {
         }
 
         switch (query.data) {
+            // If user chose to pay with a russian card
+            case 'Russian Card':
+                await bot.sendMessage(chatId, typeOfPaymentMessage, typeOfPaymentButtonsWithRussianCard);
+                console.log(`A Russian Card was chosen in ${chatId} chat`)
+
+                break;
+
+            case 'Russian Regular Donation':
+                // If user chose to sign up for a regular donation with russian card
+                await bot.sendMessage(chatId, chooseAmountMessage, amountButtonsRegularWithRussianCard)
+                console.log(`A Regular Donation was chosen in ${chatId} chat`)
+
+                break;
+
             // If user chose to pay with a foreign card
             case 'Foreign Card':
                 await bot.sendMessage(chatId, typeOfPaymentMessage, typeOfPaymentButtons)

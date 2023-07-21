@@ -135,7 +135,7 @@ bot.on('message', async (msg) => {
 
             text = text.replace(',', '.');
 
-            if (Number(text) >= 1 && !isNaN(text) ) {
+            if (Number(text) >= 1 && !isNaN(text) && Number(text)<=8000 ) {
                 const paymentInfo = await getPaymentInfo(text, date, chatId);
 
                 await sendInvoice(paymentInfo, chatId)

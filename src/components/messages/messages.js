@@ -9,4 +9,4 @@ export const successfulPaymentMessage = 'Спасибо! Ваша поддерж
 
 export const otherAmountMessage = 'Введите удобную вам сумму в евро.';
 
-export const tryAgainAmountMessage = "Сумма введена неверно. Введите сумму еще раз в формате «3.5» или «3,5», но менее 1 €."
+export const tryAgainAmountMessage = "Сумма введена неверно. Введите сумму еще раз в формате «3.5» или «3,5» в промежутке от 1 € до 8000 €."

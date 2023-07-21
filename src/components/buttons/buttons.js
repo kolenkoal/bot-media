@@ -64,6 +64,13 @@ export const amountButtonsRegular = {
                 {text: '10 €', callback_data: '10 €', url: "https://buy.stripe.com/6oEbLI5QzcE933qeUZ"},
                 {text: '20 €', callback_data: '20 €', url: "https://buy.stripe.com/9AQ2b8a6PgUpeM85kq"}
             ],
+            [
+                {
+                    text: 'Другая сумма',
+                    callback_data: 'Another Sum Regular',
+                    url: "https://buy.stripe.com/bIY5nkceX6fL1ZmdR1"
+                }
+            ],
         ]
     }
 }
